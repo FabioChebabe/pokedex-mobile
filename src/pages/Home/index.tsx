@@ -35,6 +35,8 @@ const HomeScreen = () => {
     }
   }, [getPokemonsList]);
 
+  console.log('teste');
+
   return (
     <FlatList
       contentContainerStyle={{ flexGrow: 1, alignItems: 'center' }}
