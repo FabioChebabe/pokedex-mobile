@@ -1,41 +1,29 @@
 import { StatusBar } from 'expo-status-bar';
 import { useCallback, useEffect, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import usePokemonApi from './src/hooks/usePokemonApi';
+import { NavigationContainer, useNavigation } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import HomeScreen from './src/pages/Home';
+
+function DetailsScreen() {
+  return (
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <Text>Details Screen</Text>
+    </View>
+  );
+}
+
+const Stack = createNativeStackNavigator();
 
 export default function App() {
-  const { api } = usePokemonApi();
-  const [isLoading, setIsLoading] = useState(true);
-  const [pokemons, setPokemons] = useState([]);
-
-  const getPokemonsList = useCallback(
-    async (offset = 0) => {
-      try {
-        setIsLoading(true);
-        const response = await api.listPokemons(offset);
-
-        response.results.map((pokemon) => {
-          setPokemons((prevState) => [...prevState, pokemon]);
-        });
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setIsLoading(false);
-      }
-    },
-    [api]
-  );
-
-  useEffect(() => {
-    getPokemonsList();
-  }, [getPokemonsList]);
-
-  console.log(pokemons);
   return (
-    <View style={styles.container}>
-      <Text>Pokedex</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Home">
+        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="Details" component={DetailsScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
 
