@@ -2,6 +2,7 @@ import { View, Text, TouchableOpacity, FlatList } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import usePokemonApi from '../../hooks/usePokemonApi';
+import Card from '../../components/Card';
 
 const HomeScreen = () => {
   const navigation = useNavigation();
@@ -41,7 +42,9 @@ const HomeScreen = () => {
     <FlatList
       contentContainerStyle={{ flexGrow: 1, alignItems: 'center' }}
       data={pokemons}
-      renderItem={({ item }) => <Text>{item.name}</Text>}
+      renderItem={({ item, index }) => (
+        <Card pokemonId={`${index}`} pokemonName={item.name} key={item.name} />
+      )}
       ListHeaderComponent={() => <Text>Home Screen</Text>}
       ListFooterComponent={() => (
         <TouchableOpacity onPress={() => navigation.navigate('Details')}>
