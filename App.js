@@ -5,14 +5,7 @@ import usePokemonApi from './src/hooks/usePokemonApi';
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import HomeScreen from './src/pages/Home';
-
-function DetailsScreen() {
-  return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Details Screen</Text>
-    </View>
-  );
-}
+import DetailsScreen from './src/pages/Details';
 
 const Stack = createNativeStackNavigator();
 

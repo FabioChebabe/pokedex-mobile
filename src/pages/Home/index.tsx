@@ -1,4 +1,10 @@
-import { View, Text, TouchableOpacity, FlatList } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  FlatList,
+  ActivityIndicator,
+} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import usePokemonApi from '../../hooks/usePokemonApi';
@@ -7,19 +13,21 @@ import Card from '../../components/Card';
 const HomeScreen = () => {
   const navigation = useNavigation();
   const { api } = usePokemonApi();
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [pokemons, setPokemons] = useState([]);
   const shouldlog = useRef(true);
 
   const getPokemonsList = useCallback(
     async (offset = 0) => {
       try {
-        setIsLoading(true);
-        const response = await api.listPokemons(offset);
+        if (!isLoading) {
+          setIsLoading(true);
+          const response = await api.listPokemons(offset);
 
-        response.results.map((pokemon) => {
-          setPokemons((prevState) => [...prevState, pokemon]);
-        });
+          response.results.map((pokemon) => {
+            setPokemons((prevState) => [...prevState, pokemon]);
+          });
+        }
       } catch (error) {
         console.log(error);
       } finally {
@@ -36,22 +44,29 @@ const HomeScreen = () => {
     }
   }, [getPokemonsList]);
 
-  console.log('teste');
-
   return (
     <FlatList
-      contentContainerStyle={{ flexGrow: 1, alignItems: 'center' }}
+      contentContainerStyle={{
+        flexGrow: 1,
+        padding: 16,
+      }}
       data={pokemons}
       renderItem={({ item, index }) => (
         <Card pokemonId={`${index}`} pokemonName={item.name} key={item.name} />
       )}
       ListHeaderComponent={() => <Text>Home Screen</Text>}
-      ListFooterComponent={() => (
-        <TouchableOpacity onPress={() => navigation.navigate('Details')}>
-          <Text>detail screen</Text>
-        </TouchableOpacity>
-      )}
+      ListFooterComponent={() =>
+        isLoading ? (
+          <ActivityIndicator />
+        ) : (
+          <TouchableOpacity onPress={() => navigation.navigate('Details')}>
+            <Text>detail screen</Text>
+          </TouchableOpacity>
+        )
+      }
       onEndReached={() => getPokemonsList(pokemons.length)}
+      onEndReachedThreshold={0.2}
+      ItemSeparatorComponent={() => <View style={{ height: 8 }} />}
     />
   );
 };
