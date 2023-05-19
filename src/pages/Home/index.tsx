@@ -9,6 +9,10 @@ import { useNavigation } from '@react-navigation/native';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import usePokemonApi from '../../hooks/usePokemonApi';
 import Card from '../../components/Card';
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from 'react-native-safe-area-context';
 
 const HomeScreen = () => {
   const navigation = useNavigation();
@@ -16,6 +20,7 @@ const HomeScreen = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [pokemons, setPokemons] = useState([]);
   const shouldlog = useRef(true);
+  const insets = useSafeAreaInsets();
 
   const getPokemonsList = useCallback(
     async (offset = 0) => {
@@ -46,15 +51,21 @@ const HomeScreen = () => {
 
   return (
     <FlatList
+      style={{ backgroundColor: 'red', paddingTop: insets.top }}
       contentContainerStyle={{
         flexGrow: 1,
         padding: 16,
+        backgroundColor: 'gray',
       }}
       data={pokemons}
       renderItem={({ item, index }) => (
         <Card pokemonId={`${index}`} pokemonName={item.name} key={item.name} />
       )}
-      ListHeaderComponent={() => <Text>Home Screen</Text>}
+      ListHeaderComponent={() => (
+        <View style={{ padding: 16, backgroundColor: 'red' }}>
+          <Text>Home Screen</Text>
+        </View>
+      )}
       ListFooterComponent={() =>
         isLoading ? (
           <ActivityIndicator />

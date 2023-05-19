@@ -8,6 +8,7 @@ function DetailsScreen() {
   const theme = useTheme();
   const pokemonType = params.pokemon.types[0].type.name;
 
+  console.log(params.pokemon.stats);
   return (
     <View
       style={{
@@ -31,6 +32,30 @@ function DetailsScreen() {
           <Tag type={type.type.name} key={`${idx}-${type.type.name}`} />
         ))}
       </View>
+      <Text style={{ color: theme.colors.pokemonType[pokemonType] }}>
+        About
+      </Text>
+
+      <View style={{ flexDirection: 'row' }}>
+        <View style={{ alignItems: 'center' }}>
+          <Text>{params.pokemon.weight}</Text>
+          <Text>Weight</Text>
+        </View>
+        <View style={{ alignItems: 'center' }}>
+          <Text>{params.pokemon.height}</Text>
+          <Text>Height</Text>
+        </View>
+        <View style={{ alignItems: 'center' }}>
+          <Text>{params.pokemon.weight}</Text>
+          <Text>Weight</Text>
+        </View>
+      </View>
+      <Text>Base stats</Text>
+      {params.pokemon.stats.map((stat) => (
+        <Text>
+          {stat.stat.name} {'->'} {stat.base_stat}
+        </Text>
+      ))}
     </View>
   );
 }
