@@ -9,10 +9,7 @@ import { useNavigation } from '@react-navigation/native';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import usePokemonApi from '../../hooks/usePokemonApi';
 import Card from '../../components/Card';
-import {
-  SafeAreaView,
-  useSafeAreaInsets,
-} from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const HomeScreen = () => {
   const navigation = useNavigation();
@@ -51,11 +48,12 @@ const HomeScreen = () => {
 
   return (
     <FlatList
-      style={{ backgroundColor: 'red', paddingTop: insets.top }}
+      style={{ backgroundColor: 'red', paddingTop: insets.top, flex: 1 }}
       contentContainerStyle={{
         flexGrow: 1,
         padding: 16,
         backgroundColor: 'gray',
+        paddingBottom: 70,
       }}
       data={pokemons}
       renderItem={({ item, index }) => (
