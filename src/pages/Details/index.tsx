@@ -57,91 +57,126 @@ function DetailsScreen() {
             padding: 24,
           }}
         >
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
             <AntDesign name="arrowleft" size={32} color={'white'} />
           </TouchableOpacity>
           <Text style={{ color: 'white', fontSize: 24, fontWeight: '700' }}>
             {pokemon.name}
           </Text>
-          <Text style={{ color: 'white', fontSize: 12, fontWeight: '300' }}>
+          <Text style={{ color: 'white', fontSize: 12, fontWeight: '700' }}>
             #{pokemon?.id.toString().padStart(3, '0').slice(-3)}
           </Text>
         </View>
-
-        <Image
-          source={{ uri: pokemon?.sprites.front_default }}
-          alt="pokemon"
-          style={{ width: 200, height: 200, alignSelf: 'center' }}
+        <View
+          style={{
+            backgroundColor: theme.colors.pokemonType[pokemonType],
+            height: 100,
+          }}
         />
+
         <View
           style={{
             backgroundColor: 'white',
-            alignItems: 'center',
-            justifyContent: 'center',
-            borderRadius: 8,
             flex: 1,
           }}
         >
-          <View style={{ flexDirection: 'row', gap: 16 }}>
-            {pokemon.types.map((type, idx) => (
-              <Tag type={type.type.name} key={`${idx}-${type.type.name}`} />
-            ))}
-          </View>
-          <Text style={{ color: theme.colors.pokemonType[pokemonType] }}>
-            About
-          </Text>
+          <View
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderRadius: 8,
+              flex: 1,
+              marginTop: -350,
+            }}
+          >
+            <Image
+              source={{ uri: pokemon?.sprites.front_default }}
+              alt="pokemon"
+              style={{ width: 200, height: 200, alignSelf: 'center' }}
+            />
+            <View style={{ flexDirection: 'row', gap: 16 }}>
+              {pokemon.types.map((type, idx) => (
+                <Tag type={type.type.name} key={`${idx}-${type.type.name}`} />
+              ))}
+            </View>
+            <Text
+              style={{
+                color: theme.colors.pokemonType[pokemonType],
+                fontSize: 14,
+                fontWeight: '700',
+              }}
+            >
+              About
+            </Text>
 
-          <View style={{ flexDirection: 'row' }}>
-            <View style={{ alignItems: 'center' }}>
-              <Text>{pokemon.weight}</Text>
-              <Text>Weight</Text>
-            </View>
-            <View style={{ alignItems: 'center' }}>
-              <Text>{pokemon.height}</Text>
-              <Text>Height</Text>
-            </View>
-            <View style={{ alignItems: 'center' }}>
-              <Text>{pokemon.weight}</Text>
-              <Text>Weight</Text>
-            </View>
-          </View>
-          <Text>Base stats</Text>
-          {pokemon.stats.map((stat) => (
             <View
               style={{
                 flexDirection: 'row',
+                paddingVertical: 24,
                 alignItems: 'center',
-                justifyContent: 'space-between',
-                width: '100%',
-                paddingHorizontal: 8,
               }}
             >
-              <Text>
-                {stat.stat.name} {'->'} {stat.base_stat}
-              </Text>
-              <View
-                style={{
-                  width: 200,
-                  height: 8,
-                  backgroundColor: `${theme.colors.pokemonType[pokemonType]}33`,
-                }}
-              >
-                <View
-                  style={{
-                    width: stat.base_stat,
-                    height: 8,
-                    backgroundColor: theme.colors.pokemonType[pokemonType],
-                  }}
-                />
+              <View style={{ alignItems: 'center', paddingHorizontal: 16 }}>
+                <Text>{pokemon.weight}</Text>
+                <Text>Weight</Text>
+              </View>
+              <View style={{ alignItems: 'center', paddingHorizontal: 16 }}>
+                <Text>{pokemon.height}</Text>
+                <Text>Height</Text>
+              </View>
+              <View style={{ alignItems: 'center', paddingHorizontal: 16 }}>
+                {pokemon?.abilities?.map((ability) => (
+                  <Text key={ability.ability.name}>{ability.ability.name}</Text>
+                ))}
+                <Text>Moves</Text>
               </View>
             </View>
-          ))}
+            <Text
+              style={{
+                color: theme.colors.pokemonType[pokemonType],
+                fontSize: 14,
+                fontWeight: '700',
+              }}
+            >
+              Base stats
+            </Text>
+            {pokemon.stats.map((stat) => (
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  width: '100%',
+                  paddingHorizontal: 8,
+                }}
+              >
+                <Text>
+                  {stat.stat.name} {'->'} {stat.base_stat}
+                </Text>
+                <View
+                  style={{
+                    width: 200,
+                    height: 8,
+                    backgroundColor: `${theme.colors.pokemonType[pokemonType]}33`,
+                  }}
+                >
+                  <View
+                    style={{
+                      width: stat.base_stat,
+                      height: 8,
+                      backgroundColor: theme.colors.pokemonType[pokemonType],
+                    }}
+                  />
+                </View>
+              </View>
+            ))}
+          </View>
         </View>
         {pokemon?.id !== 1 && (
           <TouchableOpacity
             style={{
               position: 'absolute',
-              top: '30%',
+              top: '15%',
               left: 5,
             }}
             onPress={getPreviousPokemon}
@@ -153,7 +188,7 @@ function DetailsScreen() {
         <TouchableOpacity
           style={{
             position: 'absolute',
-            top: '30%',
+            top: '15%',
             right: 5,
           }}
           onPress={getNextPokemon}

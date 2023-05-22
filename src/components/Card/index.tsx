@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { TouchableOpacity, Text, Image } from 'react-native';
+import { TouchableOpacity, Text, Image, View } from 'react-native';
 import usePokemonApi from '../../hooks/usePokemonApi';
 import { Pokemon } from 'pokenode-ts';
 import { useNavigation } from '@react-navigation/native';
+import { Container, ContentContainer } from './styles';
 
 interface CardProps {
   pokemonName: string;
@@ -25,24 +26,31 @@ const Card: React.FC<CardProps> = ({ pokemonId, pokemonName }) => {
   }, []);
 
   return (
-    <TouchableOpacity
+    <Container
       onPress={() => navigation.navigate('Details', { pokemon })}
-      style={{
-        borderRadius: 8,
-        padding: 8,
-        backgroundColor: 'white',
-        width: '100%',
-        alignItems: 'center',
-      }}
+      style={{}}
     >
-      <Text style={{ alignSelf: 'flex-end' }}>{pokemonId}</Text>
-      <Image
-        source={{ uri: pokemon?.sprites.front_default }}
-        alt="pokemon"
-        style={{ width: 100, height: 100 }}
+      <ContentContainer>
+        <Text style={{ alignSelf: 'flex-end' }}>{pokemonId}</Text>
+        <Image
+          source={{ uri: pokemon?.sprites.front_default }}
+          alt="pokemon"
+          style={{ width: 100, height: 100 }}
+        />
+        <Text>{pokemonName}</Text>
+      </ContentContainer>
+      <View
+        style={{
+          position: 'absolute',
+          bottom: 0,
+          backgroundColor: '#ddd',
+          borderRadius: 8,
+          height: '40%',
+          width: '100%',
+          zIndex: 0,
+        }}
       />
-      <Text>{pokemonName}</Text>
-    </TouchableOpacity>
+    </Container>
   );
 };
 

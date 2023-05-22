@@ -1,24 +1,14 @@
-import { Text, View } from 'react-native';
-import { useTheme } from 'styled-components';
+import { Container, Label } from './styles';
 
 interface TagProps {
   type: string;
 }
 
 const Tag = ({ type }: TagProps) => {
-  const theme = useTheme();
-
   return (
-    <View
-      style={{
-        borderRadius: 10,
-        paddingHorizontal: 8,
-        paddingVertical: 2,
-        backgroundColor: theme.colors.pokemonType[type],
-      }}
-    >
-      <Text style={{ color: 'white' }}>{type}</Text>
-    </View>
+    <Container pokemonType={type}>
+      <Label>{type}</Label>
+    </Container>
   );
 };
 
