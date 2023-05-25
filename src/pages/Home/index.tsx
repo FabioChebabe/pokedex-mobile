@@ -4,9 +4,17 @@ import {
   TouchableOpacity,
   FlatList,
   ActivityIndicator,
+  TextInput,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import {
+  useCallback,
+  useDeferredValue,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import usePokemonApi from '../../hooks/usePokemonApi';
 import Card from '../../components/Card';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -16,6 +24,18 @@ const HomeScreen = () => {
   const { api } = usePokemonApi();
   const [isLoading, setIsLoading] = useState(false);
   const [pokemons, setPokemons] = useState([]);
+
+  const [searchTerm, setSearchTerm] = useState('');
+  const deferredSearcTerm = useDeferredValue(searchTerm);
+  const filteredPokemons = useMemo(
+    () =>
+      pokemons.filter((pokemon) =>
+        pokemon.name
+          .toLowerCase()
+          .includes(deferredSearcTerm.toLocaleLowerCase())
+      ),
+    [pokemons, deferredSearcTerm]
+  );
   const shouldlog = useRef(true);
   const insets = useSafeAreaInsets();
 
@@ -44,7 +64,7 @@ const HomeScreen = () => {
       getPokemonsList();
       shouldlog.current = false;
     }
-  }, [getPokemonsList]);
+  }, []);
 
   return (
     <FlatList
@@ -55,13 +75,24 @@ const HomeScreen = () => {
         backgroundColor: 'gray',
         paddingBottom: 70,
       }}
-      data={pokemons}
+      data={filteredPokemons}
       renderItem={({ item, index }) => (
         <Card pokemonId={`${index}`} pokemonName={item.name} key={item.name} />
       )}
       ListHeaderComponent={() => (
         <View style={{ padding: 16, backgroundColor: 'red' }}>
-          <Text>Home Screen</Text>
+          <Text>Pokedex</Text>
+          <TextInput
+            placeholder="Pokemon Name"
+            style={{
+              padding: 8,
+              backgroundColor: 'white',
+              borderRadius: 8,
+              marginTop: 4,
+            }}
+            value={searchTerm}
+            onChangeText={setSearchTerm}
+          />
         </View>
       )}
       ListFooterComponent={() =>
@@ -73,8 +104,8 @@ const HomeScreen = () => {
           </TouchableOpacity>
         )
       }
-      onEndReached={() => getPokemonsList(pokemons.length)}
-      onEndReachedThreshold={0.2}
+      // onEndReached={() => getPokemonsList(pokemons.length)}
+      // onEndReachedThreshold={0.2}
       ItemSeparatorComponent={() => <View style={{ height: 8 }} />}
     />
   );

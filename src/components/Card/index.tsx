@@ -26,10 +26,7 @@ const Card: React.FC<CardProps> = ({ pokemonId, pokemonName }) => {
   }, []);
 
   return (
-    <Container
-      onPress={() => navigation.navigate('Details', { pokemon })}
-      style={{}}
-    >
+    <Container onPress={() => navigation.navigate('Details', { pokemon })}>
       <ContentContainer>
         <Text style={{ alignSelf: 'flex-end' }}>{pokemonId}</Text>
         <Image
