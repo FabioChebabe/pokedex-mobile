@@ -17,7 +17,10 @@ import {
 } from 'react';
 import usePokemonApi from '../../hooks/usePokemonApi';
 import Card from '../../components/Card';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from 'react-native-safe-area-context';
 
 const HomeScreen = () => {
   const navigation = useNavigation();
@@ -26,16 +29,14 @@ const HomeScreen = () => {
   const [pokemons, setPokemons] = useState([]);
 
   const [searchTerm, setSearchTerm] = useState('');
-  const deferredSearcTerm = useDeferredValue(searchTerm);
-  const filteredPokemons = useMemo(
-    () =>
-      pokemons.filter((pokemon) =>
-        pokemon.name
-          .toLowerCase()
-          .includes(deferredSearcTerm.toLocaleLowerCase())
-      ),
-    [pokemons, deferredSearcTerm]
-  );
+  // const deferredSearcTerm = useDeferredValue(searchTerm);
+  // const filteredPokemons = useMemo(
+  //   () =>
+  //     pokemons.filter((pokemon) =>
+  //       pokemon.name.toLowerCase().includes(searchTerm.toLocaleLowerCase())
+  //     ),
+  //   [pokemons, searchTerm]
+  // );
   const shouldlog = useRef(true);
   const insets = useSafeAreaInsets();
 
@@ -67,47 +68,60 @@ const HomeScreen = () => {
   }, []);
 
   return (
-    <FlatList
-      style={{ backgroundColor: 'red', paddingTop: insets.top, flex: 1 }}
-      contentContainerStyle={{
-        flexGrow: 1,
-        padding: 16,
-        backgroundColor: 'gray',
-        paddingBottom: 70,
-      }}
-      data={filteredPokemons}
-      renderItem={({ item, index }) => (
-        <Card pokemonId={`${index}`} pokemonName={item.name} key={item.name} />
-      )}
-      ListHeaderComponent={() => (
-        <View style={{ padding: 16, backgroundColor: 'red' }}>
-          <Text>Pokedex</Text>
-          <TextInput
-            placeholder="Pokemon Name"
-            style={{
-              padding: 8,
-              backgroundColor: 'white',
-              borderRadius: 8,
-              marginTop: 4,
-            }}
-            value={searchTerm}
-            onChangeText={setSearchTerm}
+    <SafeAreaView
+      style={{ flex: 1, backgroundColor: 'red' }}
+      mode="padding"
+      edges={['top', 'left', 'right']}
+    >
+      <FlatList
+        keyboardShouldPersistTaps="always"
+        keyboardDismissMode="none"
+        contentContainerStyle={{
+          flexGrow: 1,
+          backgroundColor: 'gray',
+          marginBottom: 70,
+          margin: 4,
+        }}
+        data={pokemons}
+        renderItem={({ item, index }) => (
+          <Card
+            pokemonId={`${index}`}
+            pokemonName={item.name}
+            key={item.name}
           />
-        </View>
-      )}
-      ListFooterComponent={() =>
-        isLoading ? (
-          <ActivityIndicator />
-        ) : (
-          <TouchableOpacity onPress={() => navigation.navigate('Details')}>
-            <Text>detail screen</Text>
-          </TouchableOpacity>
-        )
-      }
-      // onEndReached={() => getPokemonsList(pokemons.length)}
-      // onEndReachedThreshold={0.2}
-      ItemSeparatorComponent={() => <View style={{ height: 8 }} />}
-    />
+        )}
+        ListHeaderComponent={() => (
+          <View
+            style={{ backgroundColor: 'red', padding: 12, paddingBottom: 16 }}
+          >
+            <Text>Pokedex</Text>
+            <TextInput
+              placeholder="Pokemon Name"
+              style={{
+                padding: 8,
+                backgroundColor: 'white',
+                borderRadius: 8,
+                marginTop: 4,
+              }}
+              // value={searchTerm}
+              // onChangeText={setSearchTerm}
+            />
+          </View>
+        )}
+        ListFooterComponent={() =>
+          isLoading ? (
+            <ActivityIndicator />
+          ) : (
+            <TouchableOpacity onPress={() => navigation.navigate('Details')}>
+              <Text>detail screen</Text>
+            </TouchableOpacity>
+          )
+        }
+        // onEndReached={() => getPokemonsList(pokemons.length)}
+        // onEndReachedThreshold={0.2}
+        ItemSeparatorComponent={() => <View style={{ height: 8 }} />}
+      />
+    </SafeAreaView>
   );
 };
 

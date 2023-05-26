@@ -3,7 +3,8 @@ import styled from 'styled-components/native';
 export const Container = styled.TouchableOpacity`
   border-radius: 8px;
   background-color: white;
-  width: 100%;
+  width: 90%;
+  align-self: center;
 `;
 
 export const ContentContainer = styled.View`

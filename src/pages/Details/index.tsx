@@ -55,6 +55,7 @@ function DetailsScreen() {
             justifyContent: 'space-between',
             alignItems: 'center',
             padding: 24,
+            zIndex: 5,
           }}
         >
           <TouchableOpacity onPress={() => navigation.goBack()}>
@@ -92,7 +93,11 @@ function DetailsScreen() {
             <Image
               source={{ uri: pokemon?.sprites.front_default }}
               alt="pokemon"
-              style={{ width: 200, height: 200, alignSelf: 'center' }}
+              style={{
+                width: 200,
+                height: 200,
+                alignSelf: 'center',
+              }}
             />
             <View style={{ flexDirection: 'row', gap: 16 }}>
               {pokemon.types.map((type, idx) => (
