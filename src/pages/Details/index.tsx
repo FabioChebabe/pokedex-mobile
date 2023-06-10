@@ -6,6 +6,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import usePokemonApi from '../../hooks/usePokemonApi';
 import { useState } from 'react';
 import { AntDesign } from '@expo/vector-icons';
+import DetailsLoading from './Loading';
 
 function DetailsScreen() {
   const { params } = useRoute();
@@ -35,7 +36,7 @@ function DetailsScreen() {
   if (loading) {
     return (
       <SafeAreaView>
-        <Text>Loading...</Text>
+        <DetailsLoading />
       </SafeAreaView>
     );
   }
@@ -46,6 +47,8 @@ function DetailsScreen() {
         flex: 1,
         backgroundColor: theme.colors.pokemonType[pokemonType],
       }}
+      mode="padding"
+      edges={['top', 'right', 'left']}
     >
       <View style={{ flex: 1, padding: 4, justifyContent: 'space-between' }}>
         <View

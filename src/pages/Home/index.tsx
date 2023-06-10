@@ -78,9 +78,10 @@ const HomeScreen = () => {
         keyboardDismissMode="none"
         contentContainerStyle={{
           flexGrow: 1,
-          backgroundColor: 'gray',
+          backgroundColor: 'white',
           marginBottom: 70,
           margin: 4,
+          paddingBottom: 30,
         }}
         data={pokemons}
         renderItem={({ item, index }) => (
@@ -108,15 +109,22 @@ const HomeScreen = () => {
             />
           </View>
         )}
-        ListFooterComponent={() =>
-          isLoading ? (
-            <ActivityIndicator />
-          ) : (
-            <TouchableOpacity onPress={() => navigation.navigate('Details')}>
-              <Text>detail screen</Text>
-            </TouchableOpacity>
-          )
-        }
+        ListFooterComponent={() => (
+          <TouchableOpacity
+            onPress={() => getPokemonsList(pokemons.length)}
+            style={{
+              padding: 16,
+              backgroundColor: '#DB005B',
+              borderRadius: 16,
+              alignItems: 'center',
+              margin: 16,
+              marginTop: 24,
+            }}
+            disabled={isLoading}
+          >
+            {isLoading ? <ActivityIndicator /> : <Text>detail screen</Text>}
+          </TouchableOpacity>
+        )}
         // onEndReached={() => getPokemonsList(pokemons.length)}
         // onEndReachedThreshold={0.2}
         ItemSeparatorComponent={() => <View style={{ height: 8 }} />}

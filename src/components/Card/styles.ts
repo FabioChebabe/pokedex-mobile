@@ -5,6 +5,13 @@ export const Container = styled.TouchableOpacity`
   background-color: white;
   width: 90%;
   align-self: center;
+
+  shadow-color: #000000;
+  shadow-opacity: 0.25;
+  shadow-offset: {
+    height: 1;
+    width: 1;
+  }
 `;
 
 export const ContentContainer = styled.View`
