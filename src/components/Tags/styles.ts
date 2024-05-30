@@ -6,9 +6,9 @@ interface ContainerProps {
 }
 
 export const Container = styled.View<ContainerProps>`
-  border-radius: 10;
-  padding-horizontal: 8;
-  padding-vertical: 2;
+  border-radius: 10px;
+  padding-horizontal: 8px;
+  padding-vertical: 2px;
   background-color: ${({ theme, pokemonType }) =>
     theme.colors.pokemonType[pokemonType]};
 `;

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { TouchableOpacity, Text, Image, View } from 'react-native';
+import { Text, Image, View } from 'react-native';
 import usePokemonApi from '../../hooks/usePokemonApi';
 import { Pokemon } from 'pokenode-ts';
 import { useNavigation } from '@react-navigation/native';

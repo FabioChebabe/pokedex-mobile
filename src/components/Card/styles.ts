@@ -1,9 +1,12 @@
+import { Dimensions } from 'react-native';
 import styled from 'styled-components/native';
+const { width } = Dimensions.get('window');
+const cardWidth = (width - 40) / 3;
 
 export const Container = styled.TouchableOpacity`
   border-radius: 8px;
   background-color: white;
-  width: 90%;
+  width: ${cardWidth}px;
   align-self: center;
 
   shadow-color: #000000;
