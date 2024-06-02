@@ -24,12 +24,23 @@ import {
 } from 'react-native-safe-area-context';
 import PokeballIcon from '../../assets/icons/pokeball';
 import { Feather } from '@expo/vector-icons';
+import {
+  BottomSheetBackdrop,
+  BottomSheetModal,
+  BottomSheetView,
+} from '@gorhom/bottom-sheet';
+import { theme } from '../../theme';
+import TextWrapped from '../../components/Text';
 
 const HomeScreen = () => {
-  const navigation = useNavigation();
   const { api } = usePokemonApi();
   const [isLoading, setIsLoading] = useState(false);
   const [pokemons, setPokemons] = useState([]);
+  const bottomSheetModalRef = useRef<BottomSheetModal>();
+  const [sortOptions, setSortOptions] = useState([
+    { label: 'Number', selected: false },
+    { label: 'Name', selected: true },
+  ]);
 
   const [searchTerm, setSearchTerm] = useState('');
   const deferredSearchTerm = useDeferredValue(searchTerm);
@@ -88,7 +99,10 @@ const HomeScreen = () => {
             value={searchTerm}
             onChangeText={(text) => setSearchTerm(text)}
           />
-          <TouchableOpacity style={styles.sortButton}>
+          <TouchableOpacity
+            style={styles.sortButton}
+            onPress={() => bottomSheetModalRef.current.present()}
+          >
             <Feather name="hash" size={16} color={'red'} />
           </TouchableOpacity>
         </View>
@@ -116,6 +130,80 @@ const HomeScreen = () => {
         onEndReachedThreshold={0.2}
         ItemSeparatorComponent={() => <View style={{ height: 8 }} />}
       />
+
+      <BottomSheetModal
+        ref={bottomSheetModalRef}
+        snapPoints={['30%', '70%']}
+        backdropComponent={(props) => (
+          <BottomSheetBackdrop
+            {...props}
+            disappearsOnIndex={1}
+            appearsOnIndex={2}
+          />
+        )}
+        backgroundStyle={{ backgroundColor: theme.colors.identity.primary }}
+      >
+        <BottomSheetView style={{ padding: 8, gap: 16 }}>
+          <TextWrapped
+            typography="subtitle2"
+            color={theme.colors.grayScale.white}
+            style={{ paddingLeft: 16 }}
+          >
+            Sort by
+          </TextWrapped>
+          <FlatList
+            data={sortOptions}
+            contentContainerStyle={{
+              flexGrow: 1,
+              padding: 16,
+              backgroundColor: 'white',
+              borderRadius: 16,
+              gap: 16,
+            }}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                style={{ flexDirection: 'row', alignItems: 'center', gap: 16 }}
+                onPress={() => {
+                  setSortOptions((prevState) => {
+                    const newArray = prevState.map((value) => {
+                      if (value.label === item.label) {
+                        return { label: value.label, selected: true };
+                      }
+                      return { label: value.label, selected: false };
+                    });
+
+                    return newArray;
+                  });
+                }}
+              >
+                <View
+                  style={{
+                    borderRadius: 8,
+                    width: 16,
+                    height: 16,
+                    borderColor: theme.colors.identity.primary,
+                    borderWidth: 1,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
+                >
+                  {item.selected && (
+                    <View
+                      style={{
+                        width: 8,
+                        height: 8,
+                        backgroundColor: theme.colors.identity.primary,
+                        borderRadius: 4,
+                      }}
+                    />
+                  )}
+                </View>
+                <Text>{item.label}</Text>
+              </TouchableOpacity>
+            )}
+          />
+        </BottomSheetView>
+      </BottomSheetModal>
     </SafeAreaView>
   );
 };
@@ -123,7 +211,7 @@ const HomeScreen = () => {
 const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
-    backgroundColor: 'red',
+    backgroundColor: theme.colors.identity.primary,
   },
   container: {
     flexGrow: 1,
@@ -135,7 +223,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   headerContainer: {
-    backgroundColor: 'red',
+    backgroundColor: theme.colors.identity.primary,
     padding: 12,
     paddingBottom: 16,
     gap: 12,

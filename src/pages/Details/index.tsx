@@ -224,6 +224,7 @@ function DetailsScreen() {
                   width: '100%',
                   paddingHorizontal: 8,
                 }}
+                key={stat.stat.name}
               >
                 <View
                   style={{
