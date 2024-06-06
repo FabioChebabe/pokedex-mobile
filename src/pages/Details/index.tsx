@@ -2,7 +2,10 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { Dimensions, Image, Text, TouchableOpacity, View } from 'react-native';
 import { useTheme } from 'styled-components/native';
 import Tag from '../../components/Tags';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from 'react-native-safe-area-context';
 import usePokemonApi from '../../hooks/usePokemonApi';
 import { useState } from 'react';
 import { AntDesign } from '@expo/vector-icons';
@@ -11,6 +14,7 @@ import TextWrapped from '../../components/Text';
 
 function DetailsScreen() {
   const { params } = useRoute();
+  const insets = useSafeAreaInsets();
   const [pokemon, setPokemon] = useState(params.pokemon);
   const [loading, setLoading] = useState(false);
   const theme = useTheme();
@@ -45,11 +49,7 @@ function DetailsScreen() {
   };
 
   if (loading) {
-    return (
-      <SafeAreaView>
-        <DetailsLoading />
-      </SafeAreaView>
-    );
+    return <DetailsLoading />;
   }
 
   return (
@@ -59,7 +59,6 @@ function DetailsScreen() {
         backgroundColor: theme.colors.pokemonType[pokemonType],
       }}
       mode="padding"
-      edges={['top', 'right', 'left']}
     >
       <View style={{ flex: 1, padding: 4, justifyContent: 'space-between' }}>
         <View
@@ -69,18 +68,21 @@ function DetailsScreen() {
             justifyContent: 'space-between',
             alignItems: 'center',
             padding: 24,
+            paddingBottom: insets.bottom,
             zIndex: 5,
           }}
         >
-          <TouchableOpacity onPress={() => navigation.goBack()}>
-            <AntDesign name="arrowleft" size={32} color={'white'} />
-          </TouchableOpacity>
-          <Text style={{ color: 'white', fontSize: 24, fontWeight: '700' }}>
-            {pokemon.name}
-          </Text>
-          <Text style={{ color: 'white', fontSize: 12, fontWeight: '700' }}>
-            #{pokemon?.id.toString().padStart(3, '0').slice(-3)}
-          </Text>
+          <View style={{ gap: 8, flexDirection: 'row', alignItems: 'center' }}>
+            <TouchableOpacity onPress={() => navigation.goBack()}>
+              <AntDesign name="arrowleft" size={32} color={'white'} />
+            </TouchableOpacity>
+            <TextWrapped typography="headline" color="white">
+              {pokemon.name}
+            </TextWrapped>
+          </View>
+          <TextWrapped typography="subtitle2" color="white">
+            #{String(pokemon?.id).padStart(3, '0')}
+          </TextWrapped>
         </View>
         <View
           style={{
@@ -93,6 +95,8 @@ function DetailsScreen() {
           style={{
             backgroundColor: 'white',
             flex: 1,
+            paddingTop: 100,
+            borderRadius: 8,
           }}
         >
           <View
@@ -242,7 +246,6 @@ function DetailsScreen() {
                   </TextWrapped>
                   <View
                     style={{
-                      height: 10,
                       width: 1,
                       backgroundColor: theme.colors.grayScale.light,
                     }}
@@ -264,6 +267,8 @@ function DetailsScreen() {
                     width: '70%',
                     height: 8,
                     backgroundColor: `${theme.colors.pokemonType[pokemonType]}33`,
+                    borderRadius: 8,
+                    overflow: 'hidden',
                   }}
                 >
                   <View

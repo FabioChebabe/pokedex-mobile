@@ -47,79 +47,87 @@ const TextWrapped = ({
 
 const androidStyles = StyleSheet.create({
   headline: {
-    fontSize: 24,
+    fontSize: 32,
     fontFamily: 'Poppins-Bold',
   },
   subtitle1: {
-    fontSize: 14,
+    fontSize: 24,
     fontFamily: 'Poppins-Bold',
   },
   subtitle2: {
-    fontSize: 12,
+    fontSize: 20,
     fontFamily: 'Poppins-Bold',
   },
   subtitle3: {
-    fontSize: 10,
+    fontSize: 16,
     fontFamily: 'Poppins-Bold',
   },
   body1: {
-    fontSize: 14,
+    fontSize: 20,
     fontFamily: 'Poppins-Regular',
   },
   body2: {
-    fontSize: 12,
+    fontSize: 18,
     fontFamily: 'Poppins-Regular',
   },
   body3: {
-    fontSize: 10,
+    fontSize: 16,
     fontFamily: 'Poppins-Regular',
   },
   caption: {
-    fontSize: 8,
+    fontSize: 14,
     fontFamily: 'Poppins-Regular',
   },
 });
 
 const iosStyles = StyleSheet.create({
   headline: {
+    fontSize: 32,
+    fontFamily: 'Poppins-Bold',
+    fontWeight: 700,
+    lineHeight: 40,
+  },
+  subtitle1: {
     fontSize: 24,
     fontFamily: 'Poppins-Bold',
     fontWeight: 700,
-  },
-  subtitle1: {
-    fontSize: 14,
-    fontFamily: 'Poppins-Bold',
-    fontWeight: 700,
+    lineHeight: 32,
   },
   subtitle2: {
-    fontSize: 12,
+    fontSize: 20,
     fontFamily: 'Poppins-Bold',
     fontWeight: 700,
+    lineHeight: 28,
   },
   subtitle3: {
-    fontSize: 10,
+    fontSize: 16,
     fontFamily: 'Poppins-Bold',
     fontWeight: 700,
+    lineHeight: 24,
   },
   body1: {
+    fontSize: 20,
+    fontFamily: 'Poppins-Regular',
+    fontWeight: 400,
+    lineHeight: 28,
+  },
+  body2: {
+    fontSize: 18,
+    fontFamily: 'Poppins-Regular',
+    fontWeight: 400,
+    lineHeight: 26,
+  },
+  body3: {
+    fontSize: 16,
+    fontFamily: 'Poppins-Regular',
+    fontWeight: 400,
+    lineHeight: 24,
+  },
+  caption: {
     fontSize: 14,
     fontFamily: 'Poppins-Regular',
     fontWeight: 400,
-  },
-  body2: {
-    fontSize: 12,
-    fontFamily: 'Poppins-Regular',
-    fontWeight: 400,
-  },
-  body3: {
-    fontSize: 10,
-    fontFamily: 'Poppins-Regular',
-    fontWeight: 400,
-  },
-  caption: {
-    fontSize: 8,
-    fontFamily: 'Poppins-Regular',
-    fontWeight: 400,
+    lineHeight: 22,
   },
 });
 

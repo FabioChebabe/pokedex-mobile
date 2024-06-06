@@ -7,7 +7,6 @@ export const Container = styled.TouchableOpacity`
   border-radius: 8px;
   background-color: white;
   width: ${cardWidth}px;
-  align-self: center;
 
   shadow-color: #000000;
   shadow-opacity: 0.25;

@@ -7,7 +7,7 @@ interface TagProps {
 const Tag = ({ type }: TagProps) => {
   return (
     <Container pokemonType={type}>
-      <Label>{type}</Label>
+      <Label typography='subtitle3'>{type}</Label>
     </Container>
   );
 };

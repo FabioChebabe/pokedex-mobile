@@ -108,15 +108,13 @@ const HomeScreen = () => {
         </View>
       </View>
       <FlatList
-        keyboardShouldPersistTaps="always"
-        keyboardDismissMode="none"
         contentContainerStyle={styles.container}
         numColumns={3}
         columnWrapperStyle={{ gap: 8 }}
         data={pokemons}
         renderItem={({ item, index }) => (
           <Card
-            pokemonId={`#${('00' + (index + 1)).slice(-3)}`}
+            pokemonId={`#${String(index + 1).padStart(3, '0')}`}
             pokemonName={item.name}
             key={item.name}
           />
@@ -216,6 +214,7 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     backgroundColor: 'white',
+    paddingTop: 16,
     marginBottom: 70,
     margin: 4,
     paddingBottom: 30,
