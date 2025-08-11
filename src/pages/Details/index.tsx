@@ -1,35 +1,47 @@
-import { useNavigation, useRoute } from '@react-navigation/native';
-import { Dimensions, Image, Text, TouchableOpacity, View } from 'react-native';
-import { useTheme } from 'styled-components/native';
-import Tag from '../../components/Tags';
+import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
+import {
+  Dimensions,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import Tag from "../../components/Tags";
 import {
   SafeAreaView,
   useSafeAreaInsets,
-} from 'react-native-safe-area-context';
-import usePokemonApi from '../../hooks/usePokemonApi';
-import { useState } from 'react';
-import { AntDesign } from '@expo/vector-icons';
-import DetailsLoading from './Loading';
-import TextWrapped from '../../components/Text';
+} from "react-native-safe-area-context";
+import usePokemonApi from "../../hooks/usePokemonApi";
+import { useState } from "react";
+import { AntDesign } from "@expo/vector-icons";
+import DetailsLoading from "./Loading";
+import TextWrapped from "../../components/Text";
+import { Pokemon } from "pokenode-ts";
+import { PokemonTypeColorKeyType, theme } from "../../theme";
+import { formatString } from "../../utils/formatString";
+
+type DetailsScreenRouteProp = RouteProp<
+  { Details: { pokemon: Pokemon } },
+  "Details"
+>;
 
 function DetailsScreen() {
-  const { params } = useRoute();
+  const { params } = useRoute<DetailsScreenRouteProp>();
   const insets = useSafeAreaInsets();
   const [pokemon, setPokemon] = useState(params.pokemon);
   const [loading, setLoading] = useState(false);
-  const theme = useTheme();
-  const pokemonType = pokemon.types[0].type.name;
+  const pokemonType = pokemon?.types[0].type.name;
   const navigation = useNavigation();
   const { api } = usePokemonApi();
-  const { width } = Dimensions.get('window');
+  const { width } = Dimensions.get("window");
   const aboutBoxWidth = (width - 50) / 3;
   const statusAbreviation = {
-    hp: 'hp',
-    attack: 'atk',
-    defense: 'def',
-    'special-attack': 'satk',
-    'special-defense': 'sdef',
-    speed: 'spd',
+    hp: "hp",
+    attack: "atk",
+    defense: "def",
+    "special-attack": "satk",
+    "special-defense": "sdef",
+    speed: "spd",
   };
 
   const getNextPokemon = async () => {
@@ -54,34 +66,28 @@ function DetailsScreen() {
 
   return (
     <SafeAreaView
-      style={{
-        flex: 1,
-        backgroundColor: theme.colors.pokemonType[pokemonType],
-      }}
+      style={styles(pokemonType).safeAreaContainer}
       mode="padding"
+      edges={["top"]}
     >
-      <View style={{ flex: 1, padding: 4, justifyContent: 'space-between' }}>
-        <View
-          style={{
-            backgroundColor: theme.colors.pokemonType[pokemonType],
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            padding: 24,
-            paddingBottom: insets.bottom,
-            zIndex: 5,
-          }}
-        >
-          <View style={{ gap: 8, flexDirection: 'row', alignItems: 'center' }}>
+      <View style={[styles().container, { paddingBottom: insets.bottom }]}>
+        <View style={[styles(pokemonType).header]}>
+          <View
+            style={{
+              gap: 8,
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+          >
             <TouchableOpacity onPress={() => navigation.goBack()}>
-              <AntDesign name="arrowleft" size={32} color={'white'} />
+              <AntDesign name="arrowleft" size={32} color={"white"} />
             </TouchableOpacity>
             <TextWrapped typography="headline" color="white">
-              {pokemon.name}
+              {formatString(pokemon.name)}
             </TextWrapped>
           </View>
           <TextWrapped typography="subtitle2" color="white">
-            #{String(pokemon?.id).padStart(3, '0')}
+            #{String(pokemon?.id).padStart(3, "0")}
           </TextWrapped>
         </View>
         <View
@@ -93,7 +99,7 @@ function DetailsScreen() {
 
         <View
           style={{
-            backgroundColor: 'white',
+            backgroundColor: "white",
             flex: 1,
             paddingTop: 100,
             borderRadius: 8,
@@ -101,8 +107,8 @@ function DetailsScreen() {
         >
           <View
             style={{
-              alignItems: 'center',
-              justifyContent: 'center',
+              alignItems: "center",
+              justifyContent: "center",
               borderRadius: 8,
               flex: 1,
               marginTop: -350,
@@ -114,12 +120,15 @@ function DetailsScreen() {
               style={{
                 width: 200,
                 height: 200,
-                alignSelf: 'center',
+                alignSelf: "center",
               }}
             />
-            <View style={{ flexDirection: 'row', gap: 16, paddingBottom: 16 }}>
+            <View style={{ flexDirection: "row", gap: 16, paddingBottom: 16 }}>
               {pokemon.types.map((type, idx) => (
-                <Tag type={type.type.name} key={`${idx}-${type.type.name}`} />
+                <Tag
+                  type={type.type.name as PokemonTypeColorKeyType}
+                  key={`${idx}-${type.type.name}`}
+                />
               ))}
             </View>
             <TextWrapped
@@ -131,15 +140,15 @@ function DetailsScreen() {
 
             <View
               style={{
-                flexDirection: 'row',
+                flexDirection: "row",
                 paddingVertical: 24,
-                alignItems: 'center',
-                justifyContent: 'center',
+                alignItems: "center",
+                justifyContent: "center",
               }}
             >
               <View
                 style={{
-                  alignItems: 'center',
+                  alignItems: "center",
                   paddingHorizontal: 16,
                   width: aboutBoxWidth,
                   gap: 16,
@@ -159,11 +168,11 @@ function DetailsScreen() {
                 </TextWrapped>
               </View>
               <View
-                style={{ width: 1, height: '100%', backgroundColor: 'gray' }}
+                style={{ width: 1, height: "100%", backgroundColor: "gray" }}
               />
               <View
                 style={{
-                  alignItems: 'center',
+                  alignItems: "center",
                   paddingHorizontal: 16,
                   width: aboutBoxWidth,
                   gap: 16,
@@ -183,11 +192,11 @@ function DetailsScreen() {
                 </TextWrapped>
               </View>
               <View
-                style={{ width: 1, height: '100%', backgroundColor: 'gray' }}
+                style={{ width: 1, height: "100%", backgroundColor: "gray" }}
               />
               <View
                 style={{
-                  alignItems: 'center',
+                  alignItems: "center",
                   paddingHorizontal: 16,
                   width: aboutBoxWidth,
                   gap: 16,
@@ -222,19 +231,19 @@ function DetailsScreen() {
             {pokemon.stats.map((stat) => (
               <View
                 style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  width: '100%',
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  width: "100%",
                   paddingHorizontal: 8,
                 }}
                 key={stat.stat.name}
               >
                 <View
                   style={{
-                    width: '30%',
-                    flexDirection: 'row',
-                    justifyContent: 'flex-end',
+                    width: "30%",
+                    flexDirection: "row",
+                    justifyContent: "flex-end",
                   }}
                 >
                   <TextWrapped
@@ -242,7 +251,7 @@ function DetailsScreen() {
                     color={theme.colors.pokemonType[pokemonType]}
                     style={{ paddingHorizontal: 12 }}
                   >
-                    {statusAbreviation[stat.stat.name].toUpperCase()}{' '}
+                    {statusAbreviation[stat.stat.name].toUpperCase()}{" "}
                   </TextWrapped>
                   <View
                     style={{
@@ -259,16 +268,16 @@ function DetailsScreen() {
                     }}
                     align="left"
                   >
-                    {`${('00' + stat.base_stat).slice(-3)}`}
+                    {`${("00" + stat.base_stat).slice(-3)}`}
                   </TextWrapped>
                 </View>
                 <View
                   style={{
-                    width: '70%',
+                    width: "70%",
                     height: 8,
                     backgroundColor: `${theme.colors.pokemonType[pokemonType]}33`,
                     borderRadius: 8,
-                    overflow: 'hidden',
+                    overflow: "hidden",
                   }}
                 >
                   <View
@@ -283,31 +292,53 @@ function DetailsScreen() {
             ))}
           </View>
         </View>
+
         {pokemon?.id !== 1 && (
           <TouchableOpacity
             style={{
-              position: 'absolute',
-              top: '15%',
+              position: "absolute",
+              top: "15%",
               left: 5,
             }}
             onPress={getPreviousPokemon}
           >
-            <AntDesign name="left" size={32} color={'white'} />
+            <AntDesign name="left" size={32} color={"white"} />
           </TouchableOpacity>
         )}
-
         <TouchableOpacity
           style={{
-            position: 'absolute',
-            top: '15%',
+            position: "absolute",
+            top: "15%",
             right: 5,
           }}
           onPress={getNextPokemon}
         >
-          <AntDesign name="right" size={32} color={'white'} />
+          <AntDesign name="right" size={32} color={"white"} />
         </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
 }
+
+const styles = (pokemonType?: string) =>
+  StyleSheet.create({
+    safeAreaContainer: {
+      flex: 1,
+      backgroundColor: theme.colors.pokemonType[pokemonType],
+    },
+    container: {
+      flex: 1,
+      justifyContent: "space-between",
+      backgroundColor: "white",
+    },
+    header: {
+      backgroundColor: theme.colors.pokemonType[pokemonType],
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+      padding: 24,
+      zIndex: 5,
+    },
+  });
+
 export default DetailsScreen;
