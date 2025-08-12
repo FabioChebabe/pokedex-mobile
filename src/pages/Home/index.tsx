@@ -19,6 +19,7 @@ import Toast from "react-native-toast-message";
 const HomeScreen = () => {
   const { api } = usePokemonApi();
   const [isLoading, setIsLoading] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
   const [pokemons, setPokemons] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredPokemons, setFilteredPokemons] = useState([]);
@@ -56,6 +57,7 @@ const HomeScreen = () => {
 
   const handleSearchPokemonById = async () => {
     try {
+      setIsSearching(true);
       if (searchTerm.length > 0) {
         const response = await api.getPokemonByName(searchTerm);
         setFilteredPokemons([response]);
@@ -67,6 +69,8 @@ const HomeScreen = () => {
         text2: "Please check name and try again.",
       });
       console.error("Error fetching Pokemon:", error);
+    } finally {
+      setIsSearching(false);
     }
   };
 
@@ -99,8 +103,20 @@ const HomeScreen = () => {
           <TouchableOpacity
             style={styles.sortButton}
             onPress={handleSearchPokemonById}
+            disabled={isSearching}
           >
-            <Feather name="search" size={16} color={"red"} />
+            {isSearching ? (
+              <ActivityIndicator
+                size="small"
+                color={theme.colors.identity.primary}
+              />
+            ) : (
+              <Feather
+                name="search"
+                size={16}
+                color={theme.colors.identity.primary}
+              />
+            )}
           </TouchableOpacity>
         </View>
       </View>

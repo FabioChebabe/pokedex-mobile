@@ -1,24 +1,21 @@
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
-import {
-  Dimensions,
-  Image,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import Tag from "../../components/Tags";
+import { ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
 import {
   SafeAreaView,
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
 import usePokemonApi from "../../hooks/usePokemonApi";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AntDesign } from "@expo/vector-icons";
 import DetailsLoading from "./Loading";
-import TextWrapped from "../../components/Text";
 import { Pokemon } from "pokenode-ts";
 import { PokemonTypeColorKeyType, theme } from "../../theme";
 import { formatString } from "../../utils/formatString";
+import Header from "./components/header";
+import ProfileSection from "./components/section/profile";
+import AboutSection from "./components/section/about";
+import StatsSection from "./components/section/stats";
+import navigation from "../../navigation";
 
 type DetailsScreenRouteProp = RouteProp<
   { Details: { pokemon: Pokemon } },
@@ -29,25 +26,25 @@ function DetailsScreen() {
   const { params } = useRoute<DetailsScreenRouteProp>();
   const insets = useSafeAreaInsets();
   const [pokemon, setPokemon] = useState(params.pokemon);
+  const [pokemonDescription, setPokemonDescription] = useState(null);
   const [loading, setLoading] = useState(false);
   const pokemonType = pokemon?.types[0].type.name;
   const navigation = useNavigation();
   const { api } = usePokemonApi();
-  const { width } = Dimensions.get("window");
-  const aboutBoxWidth = (width - 50) / 3;
-  const statusAbreviation = {
-    hp: "hp",
-    attack: "atk",
-    defense: "def",
-    "special-attack": "satk",
-    "special-defense": "sdef",
-    speed: "spd",
+  const getPokemonSpecies = async (pokemonId: number) => {
+    const responsePokemonSpecies = await api.getPokemonSpeciesById(pokemonId);
+
+    setPokemonDescription(
+      responsePokemonSpecies.flavor_text_entries[0].flavor_text
+        .replace(/\s+/g, " ")
+        .trim()
+    );
   };
 
   const getNextPokemon = async () => {
     setLoading(true);
     const response = await api.getPokemonById(pokemon.id + 1);
-
+    getPokemonSpecies(pokemon.id + 1);
     setPokemon(response);
     setLoading(false);
   };
@@ -55,10 +52,16 @@ function DetailsScreen() {
   const getPreviousPokemon = async () => {
     setLoading(true);
     const response = await api.getPokemonById(pokemon.id - 1);
-
+    getPokemonSpecies(pokemon.id - 1);
     setPokemon(response);
     setLoading(false);
   };
+
+  useEffect(() => {
+    if (params.pokemon) {
+      getPokemonSpecies(params.pokemon.id);
+    }
+  }, [params.pokemon]);
 
   if (loading) {
     return <DetailsLoading />;
@@ -70,252 +73,67 @@ function DetailsScreen() {
       mode="padding"
       edges={["top"]}
     >
-      <View style={[styles().container, { paddingBottom: insets.bottom }]}>
-        <View style={[styles(pokemonType).header]}>
-          <View
-            style={{
-              gap: 8,
-              flexDirection: "row",
-              alignItems: "center",
-            }}
-          >
-            <TouchableOpacity onPress={() => navigation.goBack()}>
-              <AntDesign name="arrowleft" size={32} color={"white"} />
-            </TouchableOpacity>
-            <TextWrapped typography="headline" color="white">
-              {formatString(pokemon.name)}
-            </TextWrapped>
-          </View>
-          <TextWrapped typography="subtitle2" color="white">
-            #{String(pokemon?.id).padStart(3, "0")}
-          </TextWrapped>
-        </View>
-        <View
-          style={{
-            backgroundColor: theme.colors.pokemonType[pokemonType],
-            height: 100,
-          }}
+      <ScrollView
+        style={styles().scrollContainer}
+        contentContainerStyle={{
+          justifyContent: "space-between",
+          paddingBottom: insets.bottom || 16,
+        }}
+        showsVerticalScrollIndicator={false}
+        bounces={false}
+      >
+        <Header
+          id={`#${String(pokemon?.id).padStart(3, "0")}`}
+          title={formatString(pokemon.name)}
+          pokemonType={pokemonType}
+          onGoBack={() => navigation.goBack()}
         />
-
-        <View
-          style={{
-            backgroundColor: "white",
-            flex: 1,
-            paddingTop: 100,
-            borderRadius: 8,
-          }}
-        >
-          <View
-            style={{
-              alignItems: "center",
-              justifyContent: "center",
-              borderRadius: 8,
-              flex: 1,
-              marginTop: -350,
-            }}
-          >
-            <Image
-              source={{ uri: pokemon?.sprites.front_default }}
-              alt="pokemon"
-              style={{
-                width: 200,
-                height: 200,
-                alignSelf: "center",
-              }}
+        <View style={styles(pokemonType).header} />
+        <View style={styles().container}>
+          <View style={styles().contentContainer}>
+            <ProfileSection
+              pokemonImg={pokemon?.sprites.front_default}
+              pokemonTypes={pokemon.types.map(
+                (type) => type.type.name as PokemonTypeColorKeyType
+              )}
             />
-            <View style={{ flexDirection: "row", gap: 16, paddingBottom: 16 }}>
-              {pokemon.types.map((type, idx) => (
-                <Tag
-                  type={type.type.name as PokemonTypeColorKeyType}
-                  key={`${idx}-${type.type.name}`}
-                />
-              ))}
-            </View>
-            <TextWrapped
-              typography="subtitle1"
-              color={theme.colors.pokemonType[pokemonType]}
-            >
-              About
-            </TextWrapped>
-
-            <View
-              style={{
-                flexDirection: "row",
-                paddingVertical: 24,
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <View
-                style={{
-                  alignItems: "center",
-                  paddingHorizontal: 16,
-                  width: aboutBoxWidth,
-                  gap: 16,
-                }}
-              >
-                <TextWrapped
-                  typography="body3"
-                  color={theme.colors.grayScale.dark}
-                >
-                  {pokemon.weight}
-                </TextWrapped>
-                <TextWrapped
-                  typography="caption"
-                  color={theme.colors.grayScale.medium}
-                >
-                  Weight
-                </TextWrapped>
-              </View>
-              <View
-                style={{ width: 1, height: "100%", backgroundColor: "gray" }}
-              />
-              <View
-                style={{
-                  alignItems: "center",
-                  paddingHorizontal: 16,
-                  width: aboutBoxWidth,
-                  gap: 16,
-                }}
-              >
-                <TextWrapped
-                  typography="body3"
-                  color={theme.colors.grayScale.dark}
-                >
-                  {pokemon.height}
-                </TextWrapped>
-                <TextWrapped
-                  typography="caption"
-                  color={theme.colors.grayScale.medium}
-                >
-                  Height
-                </TextWrapped>
-              </View>
-              <View
-                style={{ width: 1, height: "100%", backgroundColor: "gray" }}
-              />
-              <View
-                style={{
-                  alignItems: "center",
-                  paddingHorizontal: 16,
-                  width: aboutBoxWidth,
-                  gap: 16,
-                }}
-              >
-                <View style={{ gap: 4 }}>
-                  {pokemon?.abilities?.map((ability) => (
-                    <TextWrapped
-                      typography="body3"
-                      color={theme.colors.grayScale.dark}
-                      key={ability.ability.name}
-                    >
-                      {ability.ability.name}
-                    </TextWrapped>
-                  ))}
-                </View>
-                <TextWrapped
-                  typography="caption"
-                  color={theme.colors.grayScale.medium}
-                >
-                  Moves
-                </TextWrapped>
-              </View>
-            </View>
-            <TextWrapped
-              typography="subtitle1"
-              color={theme.colors.pokemonType[pokemonType]}
-              style={{ marginBottom: 16 }}
-            >
-              Base stats
-            </TextWrapped>
-            {pokemon.stats.map((stat) => (
-              <View
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  width: "100%",
-                  paddingHorizontal: 8,
-                }}
-                key={stat.stat.name}
-              >
-                <View
-                  style={{
-                    width: "30%",
-                    flexDirection: "row",
-                    justifyContent: "flex-end",
-                  }}
-                >
-                  <TextWrapped
-                    typography="subtitle3"
-                    color={theme.colors.pokemonType[pokemonType]}
-                    style={{ paddingHorizontal: 12 }}
-                  >
-                    {statusAbreviation[stat.stat.name].toUpperCase()}{" "}
-                  </TextWrapped>
-                  <View
-                    style={{
-                      width: 1,
-                      backgroundColor: theme.colors.grayScale.light,
-                    }}
-                  />
-                  <TextWrapped
-                    typography="body3"
-                    color={theme.colors.grayScale.dark}
-                    style={{
-                      paddingHorizontal: 12,
-                      minWidth: 45,
-                    }}
-                    align="left"
-                  >
-                    {`${("00" + stat.base_stat).slice(-3)}`}
-                  </TextWrapped>
-                </View>
-                <View
-                  style={{
-                    width: "70%",
-                    height: 8,
-                    backgroundColor: `${theme.colors.pokemonType[pokemonType]}33`,
-                    borderRadius: 8,
-                    overflow: "hidden",
-                  }}
-                >
-                  <View
-                    style={{
-                      width: stat.base_stat,
-                      height: 8,
-                      backgroundColor: theme.colors.pokemonType[pokemonType],
-                    }}
-                  />
-                </View>
-              </View>
-            ))}
+            <AboutSection
+              pokemon={pokemon}
+              pokemonType={pokemonType}
+              pokemonDescription={pokemonDescription}
+            />
+            <StatsSection
+              pokemonStats={pokemon.stats}
+              pokemonType={pokemonType}
+            />
           </View>
         </View>
 
         {pokemon?.id !== 1 && (
           <TouchableOpacity
-            style={{
-              position: "absolute",
-              top: "15%",
-              left: 5,
-            }}
+            style={[
+              styles().arrowIcon,
+              {
+                left: 5,
+              },
+            ]}
             onPress={getPreviousPokemon}
           >
             <AntDesign name="left" size={32} color={"white"} />
           </TouchableOpacity>
         )}
         <TouchableOpacity
-          style={{
-            position: "absolute",
-            top: "15%",
-            right: 5,
-          }}
+          style={[
+            styles().arrowIcon,
+            {
+              right: 5,
+            },
+          ]}
           onPress={getNextPokemon}
         >
           <AntDesign name="right" size={32} color={"white"} />
         </TouchableOpacity>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -326,18 +144,29 @@ const styles = (pokemonType?: string) =>
       flex: 1,
       backgroundColor: theme.colors.pokemonType[pokemonType],
     },
-    container: {
+    scrollContainer: {
       flex: 1,
-      justifyContent: "space-between",
       backgroundColor: "white",
     },
     header: {
       backgroundColor: theme.colors.pokemonType[pokemonType],
-      flexDirection: "row",
-      justifyContent: "space-between",
+      height: 100,
+    },
+    container: {
+      backgroundColor: "white",
+      flex: 1,
+      borderRadius: 8,
+    },
+    contentContainer: {
       alignItems: "center",
-      padding: 24,
-      zIndex: 5,
+      justifyContent: "center",
+      borderRadius: 8,
+      flex: 1,
+      marginTop: -100,
+    },
+    arrowIcon: {
+      position: "absolute",
+      top: "15%",
     },
   });
 
