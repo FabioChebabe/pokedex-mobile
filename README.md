@@ -53,8 +53,8 @@ The app will open instantly on your device.
 - React Navigation
 - PokéAPI for Pokémon data
 
-![App Screenshot](./assets/screenshotHome.png)
-![App Screenshot](./assets/screenshotDetail.png)
+<img src="./assets/screenshotHome.png" alt="App Screenshot" width="300" />
+<img src="./assets/screenshotDetail.png" alt="App Screenshot" width="300" />
 
 ## 📄 License
 This project is licensed under the MIT License.
