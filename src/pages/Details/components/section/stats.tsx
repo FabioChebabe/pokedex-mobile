@@ -1,4 +1,3 @@
-import { View } from "react-native";
 import TextWrapped from "../../../../components/Text";
 import { theme } from "../../../../theme";
 import { PokemonStat } from "pokenode-ts";

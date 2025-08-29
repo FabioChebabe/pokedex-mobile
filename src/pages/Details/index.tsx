@@ -15,7 +15,6 @@ import Header from "./components/header";
 import ProfileSection from "./components/section/profile";
 import AboutSection from "./components/section/about";
 import StatsSection from "./components/section/stats";
-import navigation from "../../navigation";
 
 type DetailsScreenRouteProp = RouteProp<
   { Details: { pokemon: Pokemon } },

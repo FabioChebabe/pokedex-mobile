@@ -62,13 +62,12 @@ const HomeScreen = () => {
         const response = await api.getPokemonByName(searchTerm);
         setFilteredPokemons([response]);
       }
-    } catch (error) {
+    } catch (_error) {
       Toast.show({
         type: "error",
         text1: `Pokemon ${searchTerm} not found`,
         text2: "Please check name and try again.",
       });
-      console.error("Error fetching Pokemon:", error);
     } finally {
       setIsSearching(false);
     }
@@ -87,7 +86,12 @@ const HomeScreen = () => {
       edges={["top", "left", "right"]}
     >
       <View style={styles.headerContainer}>
-        <View style={styles.headerContainer}>
+        <View
+          style={[
+            styles.headerContainer,
+            { flexDirection: "row", alignItems: "center" },
+          ]}
+        >
           <PokeballIcon />
           <Text style={styles.title}>Pokedex</Text>
         </View>

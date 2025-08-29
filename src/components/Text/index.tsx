@@ -19,7 +19,6 @@ interface TextWrappedProps extends TextProps {
 const TextWrapped = ({
   typography = 'body1',
   color = 'black',
-  weight,
   size,
   align,
   ...props
