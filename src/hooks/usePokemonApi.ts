@@ -1,10 +1,10 @@
-import { PokemonClient } from 'pokenode-ts';
-import { useMemo } from 'react';
+import { PokemonClient } from "pokenode-ts";
+import { useMemo } from "react";
 
 const usePokemonApi = () => {
-    const api = useMemo(() => new PokemonClient(), []);
+  const api = useMemo(() => new PokemonClient(), []);
 
-    return { api };
+  return { api };
 };
 
 export default usePokemonApi;

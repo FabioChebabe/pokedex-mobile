@@ -1,0 +1,19 @@
+# dependencies
+node_modules
+
+# build outputs
+.expo
+.expo-shared
+dist
+build
+android
+ios
+
+# debug / logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# misc
+coverage
+*.lock

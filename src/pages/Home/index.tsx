@@ -34,7 +34,7 @@ const HomeScreen = () => {
 
           setPokemons((prevState) => {
             const newPokemons = response.results.filter(
-              (p) => !prevState.some((prev) => prev.name === p.name)
+              (p) => !prevState.some((prev) => prev.name === p.name),
             );
             return [...prevState, ...newPokemons];
           });
@@ -45,7 +45,7 @@ const HomeScreen = () => {
         setIsLoading(false);
       }
     },
-    [api, isLoading]
+    [api, isLoading],
   );
 
   useEffect(() => {

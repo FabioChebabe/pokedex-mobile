@@ -36,7 +36,7 @@ function DetailsScreen() {
     setPokemonDescription(
       responsePokemonSpecies.flavor_text_entries[0].flavor_text
         .replace(/\s+/g, " ")
-        .trim()
+        .trim(),
     );
   };
 
@@ -93,7 +93,7 @@ function DetailsScreen() {
             <ProfileSection
               pokemonImg={pokemon?.sprites.front_default}
               pokemonTypes={pokemon.types.map(
-                (type) => type.type.name as PokemonTypeColorKeyType
+                (type) => type.type.name as PokemonTypeColorKeyType,
               )}
             />
             <AboutSection
